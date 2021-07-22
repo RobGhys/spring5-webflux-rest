@@ -26,12 +26,14 @@ public class VendorController {
         return vendorRepository.findById(id);
     }
 
+    // POST --> Create
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/v1/vendors")
     Mono<Void> create(@RequestBody Publisher<Vendor> vendorStream) {
         return vendorRepository.saveAll(vendorStream).then();
     }
 
+    // PUT --> Update
     @PutMapping("/api/v1/vendors/{id}")
     Mono<Vendor> update(@PathVariable String id,
                         @RequestBody Vendor vendor) {

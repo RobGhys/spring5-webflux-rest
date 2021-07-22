@@ -78,4 +78,8 @@ public class VendorControllerTest {
                 .expectStatus()
                 .isOk();
     }
+
+    @Test
+    public void name() {
+    }
 }
