@@ -97,11 +97,11 @@ public class CategoryControllerTest {
         given(categoryRepository.save(any(Category.class)))
                 .willReturn(Mono.just(Category.builder().build()));
 
-        Mono<Category> categoryToUpdateMono = Mono.just(Category.builder().description("My descri").build());
+        Mono<Category> categoryToPatchMono = Mono.just(Category.builder().description("My descri").build());
 
         webTestClient.patch()
                 .uri("/api/v1/categories/someRandomId")
-                .body(categoryToUpdateMono, Category.class)
+                .body(categoryToPatchMono, Category.class)
                 .exchange()
                 .expectStatus()
                 .isOk();
