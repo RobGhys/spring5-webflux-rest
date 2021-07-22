@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 public class CategoryControllerTest {
@@ -87,12 +88,12 @@ public class CategoryControllerTest {
     }
 
     @Test
-    public void patchCategoryTest() throws Exception {
+    public void patchCategoryWithChangesTest() throws Exception {
         // Need to mock the id
         given(categoryRepository.findById(anyString()))
                 .willReturn(Mono.just(Category.builder().build()));
 
-        // Need t o mock the save operation
+        // Need to mock the save operation
         given(categoryRepository.save(any(Category.class)))
                 .willReturn(Mono.just(Category.builder().build()));
 
@@ -107,5 +108,28 @@ public class CategoryControllerTest {
 
         // Verify that that save operation is called at least 1 time
         verify(categoryRepository).save(any());
+    }
+
+    @Test
+    public void patchCategoryWithNoChangesTest() throws Exception {
+        // Need to mock the id
+        given(categoryRepository.findById(anyString()))
+                .willReturn(Mono.just(Category.builder().build()));
+
+        // Need to mock the save operation
+        given(categoryRepository.save(any(Category.class)))
+                .willReturn(Mono.just(Category.builder().build()));
+
+        Mono<Category> categoryToUpdateMono = Mono.just(Category.builder().build());
+
+        webTestClient.patch()
+                .uri("/api/v1/categories/someRandomId")
+                .body(categoryToUpdateMono, Category.class)
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+        // Verify that that save operation is never called
+        verify(categoryRepository, never()).save(any());
     }
 }
